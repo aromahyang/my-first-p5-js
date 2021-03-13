@@ -1,6 +1,7 @@
 const NUM_OF_CIRCLES = 10;
 const circles = [];
 const colors = ['#173F5F', '#20639B', '#3CAEA3', '#F6D55C', '#ED553B', '#D8C9CB', '#96A88E', '#A75037', '#753740', '#DB9C77'];
+const RATE = 10;
 
 let previous;
 let current;
@@ -9,17 +10,17 @@ let isShooting = false;
 let frame = 0;
 
 class Circle {
-	constructor(x, y, i, d) {
+	constructor(x, y, i) {
 		this.x = x;
 		this.y = y;
 		this.r = 30;
 		this.color = color(colors[i]);
-		this.degree = d;
-		this.speed = 0;
+		this.degree = 0;
+		this.frame = 0;
 	}
 
 	render() {
-		if(this.x + this.r / 2 > windowWidth || this.y + this.r / 2 > windowHeight) {
+		if(this.x < 0 || this.y < 0 || this.x > windowWidth || this.y > windowHeight) {
 			return;
 		}
 		
@@ -28,9 +29,23 @@ class Circle {
 		circle(this.x, this.y, this.r);
 	}
 
+	reset(x, y) {
+		this.x = x;
+		this.y = y;
+		this.degree = random(-5, 5);
+		this.frame = 0;
+	}
+
 	updatePosition(dx, dy) {
-		this.x = previous.x + (dx / 10) * frame;
-		this.y = (dy / dx) * this.x + (previous.y - previous.x * dy / dx);
+		// speed = dx / RATE
+		const radian = this.degree * Math.PI / 180;
+		const sine = Math.sin(radian);
+		const cosine = Math.cos(radian);
+		
+		this.frame = this.frame + 1;
+		const rotatedGradient = (sine * dx + cosine * dy) / (cosine * dx - sine * dy);
+		this.x = previous.x + (dx / RATE) * this.frame;
+		this.y = rotatedGradient * (this.x - previous.x) + previous.y;
 	}
 }
 
@@ -39,7 +54,7 @@ function setup() {
 	previous = createVector(0, 0);
 	current = createVector(0, 0);
 	for(let i = 0 ; i < NUM_OF_CIRCLES ; i++) {
-		circles[i] = new Circle(0, 0, i, random(-10, 10));
+		circles[i] = new Circle(0, 0, i);
 	}
 }
 
@@ -52,8 +67,7 @@ function draw() {
 		strokeWeight(10);
 		line(previous.x, previous.y, current.x, current.y);
 		for(let i = 0 ; i < NUM_OF_CIRCLES ; i++) {
-			circles[i].x = previous.x;
-			circles[i].y = previous.y;
+			circles[i].reset(previous.x, previous.y);
 		}
 	}
 
@@ -62,8 +76,11 @@ function draw() {
 		const dy = current.y - previous.y;
 
 		for(let i = 0 ; i < NUM_OF_CIRCLES ; i++) {
-			circles[i].updatePosition(dx, dy);
-			circles[i].render();
+			const integer = Math.floor(frame / 5);
+			if(i <= integer) {
+				circles[i].render();
+				circles[i].updatePosition(dx, dy);
+			}
 		}
 		frame += 1;
 	}
