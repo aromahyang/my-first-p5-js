@@ -44,8 +44,8 @@ class Circle {
 		
 		this.frame = this.frame + 1;
 		const rotatedGradient = (sine * dx + cosine * dy) / (cosine * dx - sine * dy);
-		this.x = previous.x + (dx / RATE) * this.frame;
-		this.y = rotatedGradient * (this.x - previous.x) + previous.y;
+		this.x = current.x + (dx / RATE) * this.frame;
+		this.y = rotatedGradient * (this.x - current.x) + current.y;
 	}
 }
 
@@ -67,13 +67,13 @@ function draw() {
 		strokeWeight(10);
 		line(previous.x, previous.y, current.x, current.y);
 		for(let i = 0 ; i < NUM_OF_CIRCLES ; i++) {
-			circles[i].reset(previous.x, previous.y);
+			circles[i].reset(current.x, current.y);
 		}
 	}
 
 	if(isShooting) {
-		const dx = current.x - previous.x;
-		const dy = current.y - previous.y;
+		const dx = previous.x - current.x;
+		const dy = previous.y - current.y;
 
 		for(let i = 0 ; i < NUM_OF_CIRCLES ; i++) {
 			const integer = Math.floor(frame / 5);
