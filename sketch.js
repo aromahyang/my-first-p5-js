@@ -3,6 +3,7 @@ let current;
 let isDragging = false;
 let isShooting = false;
 let slope;
+let speed;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
@@ -17,14 +18,18 @@ function draw() {
 		stroke("#FAD4AE");
 		strokeWeight(10);
 		line(previous.x, previous.y, mouseX, mouseY);
-		slope = (current.y - previous.y) / (current.x - previous.x);
+
+		const dx = current.x - previous.x;
+		const dy = current.y - previous.y;
+		slope = dy / dx;
+		speed = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / 10;
 	}
 
 	if (isShooting) {
 		noStroke();
 		fill('#173F5F');
 		circle(current.x, current.y, 30);
-		current.x = current.x - 1;
+		current.x = current.x - speed;
 		current.y = slope * current.x + (previous.y - slope * previous.x);
 	}
 }
