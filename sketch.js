@@ -4,6 +4,7 @@ let isDragging = false;
 let isShooting = false;
 let slope;
 let speed;
+let radian;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
@@ -21,6 +22,7 @@ function draw() {
 
 		const dx = current.x - previous.x;
 		const dy = current.y - previous.y;
+		radian = Math.atan2(dy, dx);
 		slope = dy / dx;
 		speed = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / 10;
 	}
@@ -29,8 +31,8 @@ function draw() {
 		noStroke();
 		fill('#173F5F');
 		circle(current.x, current.y, 30);
-		current.x = current.x - speed;
-		current.y = slope * current.x + (previous.y - slope * previous.x);
+		current.x = current.x - speed * Math.cos(radian);
+		current.y = current.y - speed * Math.sin(radian);
 	}
 }
 
