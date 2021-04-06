@@ -68,7 +68,12 @@ function draw() {
 
 	if (isShooting) {
 		for(let i = 0 ; i < NUMBER_OF_BALLS ; i++) {
-			if(i <= frame / 5) {
+			const xPos = balls[i].x;
+			const yPos = balls[i].y;
+			const diameter = balls[i].d;
+			const isInCanvas = (xPos - diameter >= 0 || yPos - diameter >= 0) &&
+				(xPos + diameter <= windowWidth && yPos + diameter <= windowHeight);
+			if(i <= frame / 5 && isInCanvas) {
 				balls[i].render();
 				balls[i].updatePosition();
 			}
