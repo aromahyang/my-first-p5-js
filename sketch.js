@@ -97,5 +97,9 @@ function mouseDragged() {
 
 function mouseReleased() {
 	isDragging = false;
-	isShooting = true;
+
+	const isLineTooShort = Math.abs(current.x - previous.x) < 10 && Math.abs(current.y - previous.y) < 10;
+	if(!isLineTooShort) {
+		isShooting = true;
+	}
 }
