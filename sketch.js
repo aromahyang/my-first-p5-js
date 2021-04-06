@@ -5,6 +5,7 @@ let previous;
 let current;
 let isDragging = false;
 let isShooting = false;
+let frame = 0;
 
 class Ball {
 	constructor(x, y) {
@@ -67,9 +68,12 @@ function draw() {
 
 	if (isShooting) {
 		for(let i = 0 ; i < NUMBER_OF_BALLS ; i++) {
-			balls[i].render();
-			balls[i].updatePosition();
+			if(i <= frame / 5) {
+				balls[i].render();
+				balls[i].updatePosition();
+			}
 		}
+		frame += 1;
 	}
 }
 
@@ -78,6 +82,7 @@ function mousePressed() {
 	isShooting = false;
 	previous.x = mouseX;
 	previous.y = mouseY;
+	frame = 0;
 }
 
 function mouseDragged() {
