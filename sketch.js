@@ -71,8 +71,8 @@ function draw() {
 			const xPos = balls[i].x;
 			const yPos = balls[i].y;
 			const diameter = balls[i].d;
-			const isInCanvas = (xPos - diameter >= 0 || yPos - diameter >= 0) &&
-				(xPos + diameter <= windowWidth && yPos + diameter <= windowHeight);
+			const isInCanvas = (xPos - diameter / 2 >= 0 && yPos - diameter / 2 >= 0) &&
+				(xPos + diameter / 2 <= windowWidth && yPos + diameter / 2 <= windowHeight);
 			if(i <= frame / 5 && isInCanvas) {
 				balls[i].render();
 				balls[i].updatePosition();
